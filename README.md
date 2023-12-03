@@ -3,10 +3,29 @@
  https://nodejs.org/en/download/ if not installed
 2. Open the backend folder from the command prompt <br />
 ```
-cd folder
+cd Mobi-duka
 ```
-3. install the dependencies
+3. Set .env files
+```
+SERVER_PORT = 'PORT'
+SERVER_HOST='localhost'
+DB_HOST='localhost'
+DB_USER='root'
+DB_PASS=''
+DB_NAME='mobi_duka'
+SECRETKEY='mobidukasecret'
+
+PASSKEY = ''
+
+SHORTCODE = ''
+CONSUMERKEY = ''
+CONSUMERSECRET = ''
+
+initiatorname=""
+initiatorPassword=""
+```
+4. install the dependencies
 ```
 npm install 
-npm start
+npm start or npm run dev
 ```
