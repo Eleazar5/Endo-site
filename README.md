@@ -1,7 +1,7 @@
 ### Backend
 1. Download the Node.js pre-built installer for your platform from <br />
- https://nodejs.org/en/download/ if not installed
-2. Open the backend folder from the command prompt <br />
+ https://nodejs.org/en/download/ if not installed and remember to set your database
+2. Open the folder from the command prompt <br />
 ```
 cd Mobi-duka
 ```
@@ -29,3 +29,4 @@ initiatorPassword=""
 npm install 
 npm start or npm run dev
 ```
+***Happy Coding***
