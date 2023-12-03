@@ -3,20 +3,29 @@ const cors = require('cors')
 const app = express();
 var bodyParser = require('body-parser');
 require('dotenv').config();
-const port = process.env.PORT;
+const { 
+  SERVER_PORT,
+  SERVER_HOST 
+}= process.env;
 
 app.use(cors({
-  // origin: 'http://localhost:3000',
-  origin: 'https://nimble-yeot-0421ef.netlify.app',
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }));
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-const mpesaroute = require('./routes/mpesaRoutes');
-app.use(mpesaroute)
+const mpesaroute = require('./src/routes/Mpesa');
+const generaldataroute = require('./src/routes/General_Data');
 
-app.listen(port || 3003, () => {
-    console.log(`The app is running in port ${port}`);
+app.use('/transactions', mpesaroute)
+app.use('/api', generaldataroute)
+
+app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log(`server listening on ${SERVER_HOST}:${SERVER_PORT}`);
 })
