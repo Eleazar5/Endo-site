@@ -5,7 +5,6 @@ const {
     tokenauth,
     stkpush,
     registerurl,
-    c2b_simulate,
     confirmation,
     validation,
     callbackurl,
@@ -27,9 +26,8 @@ const {
     timeout_result_url
 } = require('../controllers/Mpesa');
 router.post('/token', tokenauth, stkpush);
-router.post('/callbackurl/:company', callbackurl);
+router.post('/callbackurl/:account_no', callbackurl);
 router.post('/registerurl', tokenauth, registerurl);
-router.post('/c2b_simulate', tokenauth, c2b_simulate);
 router.get('/confirmation', confirmation);
 router.get('/validation', validation);
 

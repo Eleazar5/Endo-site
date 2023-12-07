@@ -191,42 +191,32 @@ exports.registerurl = (req, res) => {
     .catch((error) => console.log(error))
 };
 
-// C2B Simulate
-exports.c2b_simulate = (req, res) => {
-    const token = req.token;
-    const url = `${mpesaURL}/mpesa/c2b/v2/simulate`;
-
-    const headers = {
-        Authorization: 'Bearer ' + token
-    }
-
-    let data = {
-        ShortCode: SHORTCODE,
-        CommandID: "CustomerPayBillOnline",
-        Amount: 1,
-        Msisdn: phone,
-        BillRefNumber: "0000"
-    }
-
-    axios
-    .post(url, data, { headers })
-    .then(response => {
-        res.send(response.data)
-        console.log(response.data)
-    })
-    .catch((error) => console.log(error))
-};
-
 // Confirmation URL
 exports.confirmation = (req, res) => {
-    console.log("All transaction  will be send to this url");
-    console.log(req.body);
+    const confirmationData = req.body;
+
+    const TransactionType = confirmationData.TransactionType;
+    const TransID = confirmationData.TransID;
+    const TransTime = confirmationData.TransTime
+    const TransAmount = confirmationData.TransAmount
+    const BusinessShortCode = confirmationData.BusinessShortCode;
+    const BillRefNumber = confirmationData.BillRefNumber;
+    const InvoiceNumber = confirmationData.InvoiceNumber
+    const OrgAccountBalance = confirmationData.OrgAccountBalance;
+    const ThirdPartyTransID = confirmationData.ThirdPartyTransID;
+    const MSISDN = confirmationData.MSISDN;
+    const FirstName = confirmationData.FirstName;
+
+    res.send(TransID);
 };
   
 // Validation URL
 exports.validation = (req, res) => {
-    console.log("Validating payment");
-    console.log(req.body);
+    const resObject = {
+        ResultDesc:"Confirmation Service request accepted successfully",
+        ResultCode:"0"
+    };
+    res.send(resObject);
 };
 
 //B2C Transaction
@@ -345,8 +335,48 @@ exports.transaction_status = (req, res) => {
 };
 
 exports.transaction_status_result = (req, res) => {
-    console.log(JSON.stringify(req.body))
-    res.send(JSON.stringify(req.body))
+    const resultData = req.body?.Result.ResultParameters;
+
+    const phone = resultData.ResultParameter[0].Value;
+    const parts = phone.split(' - ');
+    const phoneNumber = parts[0];
+
+    const trans_number = resultData.ResultParameter[12].Value;
+    const amount = resultData.ResultParameter[10].Value;
+    const trans_date1 = resultData.ResultParameter[9].Value;
+
+    const trans_date = trans_date1.toString();
+
+    const year = trans_date.substr(0, 4);
+    const month = trans_date.substr(4, 2);
+    const day = trans_date.substr(6, 2);
+    const hour = trans_date.substr(8, 2);
+    const minute = trans_date.substr(10, 2);
+    const second = trans_date.substr(12, 2);
+
+    const transaction_date = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+
+    const updateQuery = `
+        UPDATE transactions_records
+        SET phone = ?,
+            amount = ?,
+            transaction_date = ?
+        WHERE transaction_id = ?
+    `;
+
+    const updatedData = {
+        phone: phoneNumber,
+        amount: amount,
+        transaction_date: transaction_date
+    };
+
+    connection.query(updateQuery, [updatedData.phone, updatedData.amount, updatedData.transaction_date, trans_number], (error, results) => {
+        if (error) {
+            console.error(error);
+        } else {
+            console.log('Data updated successfully:', results);
+        }
+    });
 }
 
 exports.timeout_status_result = (req, res) => {
