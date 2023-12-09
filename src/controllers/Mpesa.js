@@ -1,29 +1,18 @@
 const datetime = require('node-datetime');
 const axios = require('axios');
-const mysql = require('mysql');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const connection = require('../helpers/General');
 
 const { 
     PASSKEY,
     SHORTCODE,
     CONSUMERKEY,
     CONSUMERSECRET,
-    DB_HOST,
-    DB_USER,
-    DB_PASS,
-    DB_NAME,
     initiatorPassword,
     initiatorName
 }= process.env;
-
-const connection = mysql.createConnection({
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASS,
-    database: DB_NAME
-  });
 
 const environment = "live";
 let mpesaURL;
