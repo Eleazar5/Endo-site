@@ -17,9 +17,13 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 const mpesaroute = require('./src/routes/Mpesa');
+const notificationroute = require('./src/routes/Notifications');
+const usermanagement = require('./src/routes/Usermanagement');
 const generaldataroute = require('./src/routes/General_Data');
 
 app.use('/transactions', mpesaroute)
+app.use('/notifications', notificationroute)
+app.use('/auth', usermanagement)
 app.use('/api', generaldataroute)
 
 app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
