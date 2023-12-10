@@ -3,7 +3,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const connection = require('../helpers/General');
+const connection = require('../helpers/dbConfig');
 
 const { 
     PASSKEY,
