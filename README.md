@@ -23,6 +23,9 @@ CONSUMERSECRET = ''
 
 initiatorname=""
 initiatorPassword=""
+
+mailUser='eleazarsimba3000@gmail.com'
+mailPass='ynry bfzv mdgl uwnt'
 ```
 4. install the dependencies
 ```
