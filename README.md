@@ -23,6 +23,9 @@ CONSUMERSECRET = ''
 
 initiatorname=""
 initiatorPassword=""
+
+emailUser:""
+emailPass:""
 ```
 4. install the dependencies
 ```
