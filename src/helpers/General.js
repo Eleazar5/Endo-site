@@ -1,10 +1,26 @@
 const moment = require("moment");
 const nodeMailer = require('nodemailer');
+const fs = require('fs');
 
 const {
     mailUser,
     mailPass
-} = process.env
+} = process.env;
+
+const savelogs = true;
+
+//Create file logs
+const appendToLogFile = (log) => {
+    const currentDate = moment().format('YYYY-MM-DD');
+    const timeNow = moment().format('HH:mm:ss');
+
+    const logMessage = `${timeNow} - ${log} \n`;
+    if(savelogs){
+        fs.appendFile(`logs-${currentDate}.txt`, logMessage, function (err) {
+            if (err) throw err;
+        });
+    }    
+}
 
 //Correct phone number
 const transformPhoneNumber = (input) => {
@@ -70,5 +86,6 @@ module.exports = {
     transformPhoneNumber,
     generateOTP,
     validateOTP,
-    sendEmail
+    sendEmail,
+    appendToLogFile
 }

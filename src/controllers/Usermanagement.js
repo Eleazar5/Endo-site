@@ -8,7 +8,8 @@ const {
     transformPhoneNumber,
     generateOTP,
     validateOTP,
-    sendEmail
+    sendEmail,
+    appendToLogFile
 } = require('../helpers/General');
 
 const {
@@ -34,8 +35,7 @@ exports.updateLogintrials = () => {
         
             if (results.affectedRows > 0) {
                 console.log(`Updated ${results.affectedRows} users.`);
-            } else {
-                console.log('No users found for update.');
+                appendToLogFile(`Updated ${results.affectedRows} users.`)
             }
         });
     });
@@ -80,6 +80,7 @@ exports.signup = (req, res) => {
                     errorDesc: "Record has been created",
                     success:"1"
                 };
+                appendToLogFile( email+" has been registered");
                 return res.status(200).send(resObject)
             });
         }else{
