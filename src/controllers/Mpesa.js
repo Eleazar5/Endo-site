@@ -17,7 +17,7 @@ const {
 const environment = "live";
 let mpesaURL;
 let filePath;
-const sitebaseURL = "https://3925-102-216-85-11.ngrok-free.app"
+const sitebaseURL = "https://94a0-197-248-82-61.ngrok-free.app"
 
 if(environment == "live"){
     mpesaURL = "https://api.safaricom.co.ke"
@@ -301,7 +301,7 @@ exports.transaction_status = (req, res) => {
         Initiator: initiatorName,
         SecurityCredential: securityCredential(initiatorPassword),
         CommandID: "TransactionStatusQuery",
-        TransactionID: "RL13XFQ6WB",
+        TransactionID: "RLF8A2QE10",
         PartyA: SHORTCODE,
         IdentifierType: "4",
         ResultURL: `${sitebaseURL}/transactions/status_result`,
@@ -309,8 +309,6 @@ exports.transaction_status = (req, res) => {
         Remarks: "OK",
         Occasion:"OK"
     }
-
-    console.log(data)
 
     axios
     .post(url, data, { headers })
@@ -325,47 +323,48 @@ exports.transaction_status = (req, res) => {
 
 exports.transaction_status_result = (req, res) => {
     const resultData = req.body?.Result.ResultParameters;
+    console.log(JSON.stringify(req.body))
 
-    const phone = resultData.ResultParameter[0].Value;
-    const parts = phone.split(' - ');
-    const phoneNumber = parts[0];
+    // const phone = resultData.ResultParameter[0].Value;
+    // const parts = phone.split(' - ');
+    // const phoneNumber = parts[0];
 
-    const trans_number = resultData.ResultParameter[12].Value;
-    const amount = resultData.ResultParameter[10].Value;
-    const trans_date1 = resultData.ResultParameter[9].Value;
+    // const trans_number = resultData.ResultParameter[12].Value;
+    // const amount = resultData.ResultParameter[10].Value;
+    // const trans_date1 = resultData.ResultParameter[9].Value;
 
-    const trans_date = trans_date1.toString();
+    // const trans_date = trans_date1.toString();
 
-    const year = trans_date.substr(0, 4);
-    const month = trans_date.substr(4, 2);
-    const day = trans_date.substr(6, 2);
-    const hour = trans_date.substr(8, 2);
-    const minute = trans_date.substr(10, 2);
-    const second = trans_date.substr(12, 2);
+    // const year = trans_date.substr(0, 4);
+    // const month = trans_date.substr(4, 2);
+    // const day = trans_date.substr(6, 2);
+    // const hour = trans_date.substr(8, 2);
+    // const minute = trans_date.substr(10, 2);
+    // const second = trans_date.substr(12, 2);
 
-    const transaction_date = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    // const transaction_date = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 
-    const updateQuery = `
-        UPDATE transactions_records
-        SET phone = ?,
-            amount = ?,
-            transaction_date = ?
-        WHERE transaction_id = ?
-    `;
+    // const updateQuery = `
+    //     UPDATE transactions_records
+    //     SET phone = ?,
+    //         amount = ?,
+    //         transaction_date = ?
+    //     WHERE transaction_id = ?
+    // `;
 
-    const updatedData = {
-        phone: phoneNumber,
-        amount: amount,
-        transaction_date: transaction_date
-    };
+    // const updatedData = {
+    //     phone: phoneNumber,
+    //     amount: amount,
+    //     transaction_date: transaction_date
+    // };
 
-    connection.query(updateQuery, [updatedData.phone, updatedData.amount, updatedData.transaction_date, trans_number], (error, results) => {
-        if (error) {
-            console.error(error);
-        } else {
-            console.log('Data updated successfully:', results);
-        }
-    });
+    // connection.query(updateQuery, [updatedData.phone, updatedData.amount, updatedData.transaction_date, trans_number], (error, results) => {
+    //     if (error) {
+    //         console.error(error);
+    //     } else {
+    //         console.log('Data updated successfully:', results);
+    //     }
+    // });
 }
 
 exports.timeout_status_result = (req, res) => {
