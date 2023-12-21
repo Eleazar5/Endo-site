@@ -25,7 +25,7 @@ const {
     reverse_result_url,
     timeout_result_url
 } = require('../controllers/Mpesa');
-router.post('/token', tokenauth, stkpush);
+router.post('/stk_push', tokenauth, stkpush);
 router.post('/callbackurl/:account_no', callbackurl);
 router.post('/registerurl', tokenauth, registerurl);
 router.get('/confirmation', confirmation);

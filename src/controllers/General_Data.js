@@ -21,8 +21,6 @@ exports.worldCountries = (req, res) => {
 
             return {
                 country_name: countryData.name?.common,
-                capital_city: countryData.capital,
-                continent: countryData.continents,
                 nameCode: countryData.cca2,
                 countryDialCode: callingCode
             };
