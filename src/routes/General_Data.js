@@ -4,7 +4,11 @@ const router = express.Router();
 const {
     worldCountries
 } = require('../controllers/General_Data');
-router.get('/countries', worldCountries);
+
+const {
+    isAuth
+} = require('../controllers/Usermanagement')
+router.get('/countries', isAuth, worldCountries);
 
 module.exports =router;
 

@@ -1,7 +1,7 @@
 const connection = require('../helpers/dbConfig');
 
 const newUser_data = (data, res) => {
-    connection.query('INSERT INTO `players` SET ?', data, function (err, results) {
+    connection.query('INSERT INTO `tb_players` SET ?', data, function (err, results) {
         if (err) throw err;
         response = `END You have been registered as a ${data.position}`;
         setTimeout(() => {
@@ -21,7 +21,7 @@ exports.ussd = (req, res) => {
         2. Quit`;
         break;
       case '1':
-        connection.query('SELECT * FROM players WHERE tel = ? ', [phoneNumber], function (err, rows) {
+        connection.query('SELECT * FROM tb_players WHERE tel = ? ', [phoneNumber], function (err, rows) {
           if (err) throw err;
           if (!rows.length) {
             response = `CON Choose your preferred position

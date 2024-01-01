@@ -16,6 +16,14 @@ const {
     SECRETKEY
 } = process.env;
 
+exports.isAuth = (req, res, next) => {
+    if(req.session.isAuth){
+        next();
+    }else{
+        return res.send("User is not authorised");
+    }
+}
+
 exports.updateLogintrials = () => {
     const task = cron.schedule('* * * * * *', () => {
         const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -173,6 +181,7 @@ exports.otpAuth = (req, res) => {
                             lastname: rows[0].lastname,
                             phone_number: rows[0].phone_number
                         };
+                        req.session.isAuth = true;
                         return res.send({
                             user: resObject,
                             token: token, 

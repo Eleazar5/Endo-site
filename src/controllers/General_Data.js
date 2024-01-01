@@ -15,7 +15,6 @@ exports.worldCountries = (req, res) => {
             try {
                 callingCode = getCountryCallingCode(countryData.cca2);
             } catch (error) {
-                console.error('Unknown country:', countryData.cca2);
                 callingCode = 'N/A'; 
             }
 
