@@ -135,7 +135,7 @@ exports.callbackurl = (req, res) => {
 
     const formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 
-    const inserttrans = 'INSERT INTO mpesa_transactions SET ?';
+    const inserttrans = 'INSERT INTO tb_mpesa_transactions SET ?';
     var new_trans_data = {
         phone_number: paying_phone,
         transaction: trans_number,

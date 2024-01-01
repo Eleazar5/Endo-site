@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors')
 const app = express();
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session')
 
 require('dotenv').config();
 const { 
@@ -13,6 +14,12 @@ app.use(cors({
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }));
+
+app.use(session({
+  secret: 'block_density',
+  resave: false,
+  saveUninitialized: false
+}))
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
