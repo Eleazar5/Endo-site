@@ -57,17 +57,17 @@ CREATE TABLE IF NOT EXISTS tb_players (
 // Execute queries for table creation
 pool.query(createMpesaTransactionsTable, (error, results) => {
   if (error) throw error;
-  console.log('Mpesatransactions table created (if not exists)');
+  return;
 });
 
 pool.query(createUsersTable, (error, results) => {
   if (error) throw error;
-  console.log('Users table created (if not exists)');
+  return;
 });
 
 pool.query(createPlayersTable, (error, results) => {
     if (error) throw error;
-    console.log('Players table created (if not exists)');
+    return;
 });
 
 module.exports = pool;

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const path = require('path');
 const connection = require('../helpers/dbConfig');
 const salt = bcrypt.genSaltSync(10);
 const jwt = require('jsonwebtoken');
@@ -9,11 +10,18 @@ const {
     generateOTP,
     validateOTP,
     sendEmail,
-    appendToLogFile
+    appendToLogFile,
+    runScriptFile
 } = require('../helpers/General');
 
 const {
     SECRETKEY
+} = process.env;
+
+const { 
+    DB_USER,
+    DB_PASS,
+    DB_NAME
 } = process.env;
 
 exports.isAuth = (req, res, next) => {
@@ -24,8 +32,8 @@ exports.isAuth = (req, res, next) => {
     }
 }
 
-exports.updateLogintrials = () => {
-    const task = cron.schedule('* * * * * *', () => {
+exports.updateAuthCrons = () => {
+    const clearTrials = cron.schedule('* * * * * *', () => {
         const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
         const updateQuery = `
             UPDATE tb_users 
@@ -48,8 +56,17 @@ exports.updateLogintrials = () => {
         });
     });
 
-    task.start();    
-    return task;
+    const dbBackup = cron.schedule('0 0 * * *', () => {
+        const backupFilePath = path.join(__dirname, '..', 'library/database_backups', `backup-${moment().format('YYYY-MM-DD')}.sql`);
+
+        const scriptmsg = "Database backup done";
+        const command = `mysqldump -u ${DB_USER} -p${DB_PASS} ${DB_NAME} > "${backupFilePath}"`;
+        runScriptFile(command, scriptmsg);
+    });
+
+    clearTrials.start();
+    dbBackup.start();    
+    return;
 }
 
 exports.signup = (req, res) => {
