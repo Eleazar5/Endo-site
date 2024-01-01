@@ -1,6 +1,8 @@
 const moment = require("moment");
 const nodeMailer = require('nodemailer');
+const { exec } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 
 const {
     mailUser,
@@ -15,8 +17,9 @@ const appendToLogFile = (log) => {
     const timeNow = moment().format('HH:mm:ss');
 
     const logMessage = `${timeNow} - ${log} \n`;
+    const logsFilePath = path.join(__dirname, '..', 'library/activity_logs', `logs-${currentDate}.txt`);
     if(savelogs){
-        fs.appendFile(`logs-${currentDate}.txt`, logMessage, function (err) {
+        fs.appendFile(logsFilePath, logMessage, function (err) {
             if (err) throw err;
         });
     }    
@@ -44,10 +47,8 @@ const validateOTP = (userEmail, otpCreatedAt, expirationTimeInMinutes) => {
     const otpExpirationTime = moment(otpCreatedAt).add(expirationTimeInMinutes, 'minutes').format('YYYY-MM-DD HH:mm:ss');
 
     if (currentTime <= otpExpirationTime) {
-        console.log('OTP is valid for user:', userEmail);
         return true;
     } else {
-        console.log('OTP has expired for user:', userEmail);
         return false;
     }
 }
@@ -82,10 +83,27 @@ const sendEmail = (email, subject, mailbody) => {
     });
 }
 
+//Run script files
+const runScriptFile = (command, scriptmsg) => {  
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(error.message)
+        return;
+      }
+      if (stderr) {
+        console.error(stderr)
+        return;
+      }
+      console.log(stdout);
+      appendToLogFile(scriptmsg)
+    });
+};
+
 module.exports = {
     transformPhoneNumber,
     generateOTP,
     validateOTP,
     sendEmail,
-    appendToLogFile
+    appendToLogFile,
+    runScriptFile
 }

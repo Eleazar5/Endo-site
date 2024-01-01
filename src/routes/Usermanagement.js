@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    updateLogintrials,
+    updateAuthCrons,
     signup,
     signin,
     otpAuth
 } = require('../controllers/Usermanagement');
 
-updateLogintrials();
+updateAuthCrons();
 
 router.post('/sign_up', signup);
 router.post('/sign_in', signin);
