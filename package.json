@@ -30,6 +30,8 @@
     "nodemailer": "^6.9.1",
     "path": "^0.12.7",
     "pem": "^1.14.8",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "unirest": "^0.6.0",
     "ws": "^8.15.1"
   },

@@ -6,10 +6,9 @@ const path = require('path');
 
 const {
     mailUser,
-    mailPass
+    mailPass,
+    saveActiviyLogs
 } = process.env;
-
-const savelogs = true;
 
 //Create file logs
 const appendToLogFile = (log) => {
@@ -18,12 +17,28 @@ const appendToLogFile = (log) => {
 
     const logMessage = `${timeNow} - ${log} \n`;
     const logsFilePath = path.join(__dirname, '..', 'library/activity_logs', `logs-${currentDate}.txt`);
-    if(savelogs){
+    if(saveActiviyLogs == "true"){
         fs.appendFile(logsFilePath, logMessage, function (err) {
             if (err) throw err;
         });
     }    
 }
+
+//Run script files
+const runScriptFile = (command, scriptmsg) => {  
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(error.message)
+      return;
+    }
+    if (stderr) {
+      console.error(stderr)
+      return;
+    }
+    console.log(stdout);
+    appendToLogFile(scriptmsg)
+  });
+};
 
 //Correct phone number
 const transformPhoneNumber = (input) => {
@@ -82,22 +97,6 @@ const sendEmail = (email, subject, mailbody) => {
         }
     });
 }
-
-//Run script files
-const runScriptFile = (command, scriptmsg) => {  
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(error.message)
-        return;
-      }
-      if (stderr) {
-        console.error(stderr)
-        return;
-      }
-      console.log(stdout);
-      appendToLogFile(scriptmsg)
-    });
-};
 
 module.exports = {
     transformPhoneNumber,
