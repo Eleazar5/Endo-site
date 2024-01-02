@@ -26,6 +26,14 @@ initiatorPassword=""
 
 mailUser='eleazarsimba3000@gmail.com'
 mailPass='ynry bfzv mdgl uwnt'
+
+WHATSAPP_TOKEN = ""
+VERIFY_TOKEN = ""
+
+saveActiviyLogs = true
+saveDatabaseBackup = true
+environment = 'live' # else 'test'
+sitebaseURL = "https://94a0-197-248-82-61.ngrok-free.app"
 ```
 4. install the dependencies
 ```
