@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const moment = require("moment");
 const cron = require('node-cron');
 const {
-    transformPhoneNumber,
     generateOTP,
     validateOTP,
     sendEmail,
@@ -14,23 +13,13 @@ const {
     runScriptFile
 } = require('../helpers/General');
 
-const {
-    SECRETKEY
-} = process.env;
-
 const { 
     DB_USER,
     DB_PASS,
-    DB_NAME
+    DB_NAME,
+    SECRETKEY,
+    saveDatabaseBackup
 } = process.env;
-
-exports.isAuth = (req, res, next) => {
-    if(req.session.isAuth){
-        next();
-    }else{
-        return res.send("User is not authorised");
-    }
-}
 
 exports.updateAuthCrons = () => {
     const clearTrials = cron.schedule('* * * * * *', () => {
@@ -61,7 +50,9 @@ exports.updateAuthCrons = () => {
 
         const scriptmsg = "Database backup done";
         const command = `mysqldump -u ${DB_USER} -p${DB_PASS} ${DB_NAME} > "${backupFilePath}"`;
-        runScriptFile(command, scriptmsg);
+        if(saveDatabaseBackup == "true"){
+            runScriptFile(command, scriptmsg);
+        }
     });
 
     clearTrials.start();
@@ -231,6 +222,21 @@ exports.otpAuth = (req, res) => {
                     return res.send(resObject);
                 });
             } 
+        }
+    });
+};
+
+exports.getusers = (req, res) => {
+    var sql = "SELECT * FROM tb_users"
+    connection.query(sql, function(error,rows, fields){
+        if(error) {
+            return res.send("Error in getting the users");
+        }else { 
+            const resObject = {
+                data: rows,
+                success:"1"
+            };
+            return res.status(200).send(resObject);
         }
     });
 };

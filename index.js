@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const app = express();
 const bodyParser = require('body-parser');
-const session = require('express-session')
+const session = require('express-session');
+const {swaggerDocs} = require('./src/utils/swagger');
 
 require('dotenv').config();
 const { 
@@ -42,4 +43,5 @@ app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
     process.exit(1);
   }
   console.log(`server listening on ${SERVER_HOST}:${SERVER_PORT}`);
+  swaggerDocs(app, SERVER_PORT);
 })

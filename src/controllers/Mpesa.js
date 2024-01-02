@@ -11,13 +11,13 @@ const {
     CONSUMERKEY,
     CONSUMERSECRET,
     initiatorPassword,
-    initiatorName
+    initiatorName,
+    environment,
+    sitebaseURL
 }= process.env;
 
-const environment = "live";
 let mpesaURL;
 let filePath;
-const sitebaseURL = "https://94a0-197-248-82-61.ngrok-free.app"
 
 if(environment == "live"){
     mpesaURL = "https://api.safaricom.co.ke"

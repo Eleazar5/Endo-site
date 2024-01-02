@@ -7,7 +7,7 @@ const {
 
 const {
     isAuth
-} = require('../controllers/Usermanagement')
+} = require('../validators/auth')
 router.get('/countries', isAuth, worldCountries);
 
 module.exports =router;
