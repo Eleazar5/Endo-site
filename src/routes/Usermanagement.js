@@ -6,7 +6,8 @@ const {
     signup,
     signin,
     otpAuth,
-    getusers
+    getusers,
+    getuserspagination
 } = require('../controllers/Usermanagement');
 
 const {
@@ -20,5 +21,6 @@ router.post('/sign_in', signin);
 
 router.post('/confirm_otp', otpAuth);
 router.get('/users', authMiddleware, getusers);
+router.get('/users_list', authMiddleware, getuserspagination);
 
 module.exports =router;
