@@ -12,3 +12,9 @@ svc.on('install',function(){
 });
 
 svc.install();
+
+
+// To run this, open root file on command prompt as an adminsitraor and run
+// node service.js
+// To delete the service, open command prompt as an adminsitraor and run
+// sc delete endosite.exe
