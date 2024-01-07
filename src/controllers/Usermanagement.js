@@ -240,3 +240,21 @@ exports.getusers = (req, res) => {
         }
     });
 };
+
+exports.getuserspagination = (req, res) => {
+    var sql = "SELECT * FROM tb_users ORDER BY id DESC LIMIT ?, ?"
+    const { page = 1, limit = 2 } = req.query;
+    const offset = (page - 1) * limit;
+
+    connection.query(sql, [offset, Number(limit)], function(error,rows, fields){
+        if(error) {
+            return res.send("Error in getting the users");
+        }else { 
+            const resObject = {
+                data: rows,
+                success:"1"
+            };
+            return res.status(200).send(resObject);
+        }
+    });
+};
