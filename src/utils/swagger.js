@@ -25,8 +25,12 @@ const options = {
     ],
     tags: [
         {
-          name: "AuthController",
+          name: "User authentication",
           description: "Authentication-related endpoints",
+        },
+        {
+          name: "MTN-Integration",
+          description: "MTN payment endpoints",
         },
       ],
     },
@@ -42,7 +46,7 @@ const swaggerSpec = swaggerJsdoc(options);
  * /auth/sign_in:
  *   post:
  *     tags:
- *       - AuthController
+ *       - User authentication
  *     summary: Sign-in user
  *     description: Sign in a user by email and password
  *     requestBody:
@@ -87,7 +91,7 @@ const swaggerSpec = swaggerJsdoc(options);
  * /auth/sign_up:
  *   post:
  *     tags:
- *       - AuthController
+ *       - User authentication
  *     summary: Sign up user
  *     description: Register a new user
  *     requestBody:
@@ -143,7 +147,7 @@ const swaggerSpec = swaggerJsdoc(options);
  * /auth/confirm_otp:
  *   post:
  *     tags:
- *       - AuthController
+ *       - User authentication
  *     summary: OTP Authentication
  *     description: Authenticate user using OTP
  *     requestBody:
@@ -204,7 +208,7 @@ const swaggerSpec = swaggerJsdoc(options);
  * /auth/users:
  *   get:
  *     tags:
- *       - AuthController
+ *       - User authentication
  *     summary: Get all users
  *     description: Retrieve all users' data
  *     security:
@@ -253,6 +257,58 @@ const swaggerSpec = swaggerJsdoc(options);
  *                 error:
  *                   type: string
  */
+
+
+
+
+
+//Create momo user
+/**
+ * @swagger
+ * /momo/create_momo_user:
+ *   post:
+ *     tags:
+ *       - MTN-Integration
+ *     summary: Create Momo user
+ *     description: Register a momo user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - providerCallbackHost
+ *             properties:
+ *               providerCallbackHost:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: User Created Successfully
+ *         content:
+ *           application/json:
+ *             headers:
+ *               Ocp-Apim-Subscription-Key: 1b8492b3832d44fdae0274aa3fa7db1d
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errorDesc:
+ *                   type: string
+ *                 success:
+ *                   type: string
+ *       '400':
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errorDesc:
+ *                   type: string
+ *                 success:
+ *                   type: string
+ */
+
 
 exports.swaggerDocs = (app, port) => {
   // Swagger page
