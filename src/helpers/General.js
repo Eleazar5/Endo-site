@@ -3,6 +3,7 @@ const nodeMailer = require('nodemailer');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer')
 
 const {
     mailUser,
@@ -98,11 +99,26 @@ const sendEmail = (email, subject, mailbody) => {
     });
 }
 
+
+//Upload image
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '..', 'library/images'))
+  },
+  filename: (req, file, cb) => {
+    console.log(file)
+    cb(null, Date.now() +path.extname(file.originalname))
+  }
+})
+
+const upload = multer({storage: storage}).single("endofile");
+
 module.exports = {
     transformPhoneNumber,
     generateOTP,
     validateOTP,
     sendEmail,
     appendToLogFile,
-    runScriptFile
+    runScriptFile,
+    upload
 }
