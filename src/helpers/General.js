@@ -79,12 +79,22 @@ const transporter = nodeMailer.createTransport({
     }
 });
 
-const sendEmail = (email, subject, mailbody) => {
+const sendEmail = (email, subject, mailbody, attachment) => {
+    const uploadDir = path.join(__dirname, '..', 'library/images');
     const mailOptions = {
         to: email,
         subject: subject,
         html: mailbody
     };
+
+    if (attachment) {
+      mailOptions.attachments = [
+        {
+          filename: attachment,
+          path: `${uploadDir}/${attachment}`,
+        },
+      ];
+    }
 
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
