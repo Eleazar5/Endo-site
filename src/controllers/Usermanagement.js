@@ -263,3 +263,9 @@ exports.getuserspagination = (req, res) => {
         }
     });
 };
+
+exports.uploadFile = (req, res) => {
+    const filename = req.file.filename;
+    console.log(filename);
+    res.send(filename);
+};

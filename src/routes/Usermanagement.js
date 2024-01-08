@@ -7,12 +7,17 @@ const {
     signin,
     otpAuth,
     getusers,
-    getuserspagination
+    getuserspagination,
+    uploadFile
 } = require('../controllers/Usermanagement');
 
 const {
     authMiddleware
 } = require('../validators/auth')
+
+const {
+    upload
+} = require('../helpers/General')
 
 updateAuthCrons();
 
@@ -22,5 +27,7 @@ router.post('/sign_in', signin);
 router.post('/confirm_otp', otpAuth);
 router.get('/users', authMiddleware, getusers);
 router.get('/users_list', authMiddleware, getuserspagination);
+
+router.post('/file_upload', upload, uploadFile);
 
 module.exports =router;
