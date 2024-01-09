@@ -27,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const mpesaroute = require('./src/routes/Mpesa');
 const momoroute = require('./src/routes/Momo-integration');
+const messages = require('./src/routes/Messages');
 const notificationroute = require('./src/routes/Notifications');
 const usermanagement = require('./src/routes/Usermanagement');
 const generaldataroute = require('./src/routes/General_Data');
@@ -34,6 +35,7 @@ const ussdroute = require('./src/routes/Ussd');
 
 app.use('/transactions', mpesaroute)
 app.use('/momo', momoroute)
+app.use('/message', messages)
 app.use('/notifications', notificationroute)
 app.use('/auth', usermanagement)
 app.use('/api', generaldataroute)

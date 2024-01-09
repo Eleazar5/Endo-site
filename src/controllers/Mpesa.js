@@ -64,7 +64,6 @@ exports.tokenauth = (req, res, next) => {
         headers
     })
     .then((response) => {
-        console.log(response.data);
         let data = response.data;
         let access_token = data.access_token
         req.token = access_token;
