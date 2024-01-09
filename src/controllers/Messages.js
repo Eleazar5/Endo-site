@@ -1,8 +1,8 @@
 const axios = require('axios');
 //Get africa's talking balace
 exports.getAfricaAccountBal = (req, reply, fastify) => {
-    const username = "CFT"
-    const _apiKey = "0274ce4aa073c1ff12ed3a387c50493f381ce55fbf90609b34310c4ebbf30a2b"
+    const username = ""
+    const _apiKey = ""
     let config = {
       method: 'get',
       url: `https://api.africastalking.com/version1/user?username=${username}`,
