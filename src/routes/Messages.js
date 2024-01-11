@@ -3,7 +3,8 @@ const router = express.Router();
 
 const {
     getAfricaAccountBal,
-    sendAfricaMessage
+    sendAfricaMessage,
+    onfonBal
 } = require('../controllers/Messages');
 
 const {
@@ -12,6 +13,7 @@ const {
 
 router.get('/africa_bal', authMiddleware, getAfricaAccountBal);
 router.post('/send_sms', authMiddleware, sendAfricaMessage);
+router.get('/onfon_bal', onfonBal);
 
 module.exports =router;
 
