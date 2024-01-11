@@ -60,3 +60,29 @@ exports.sendAfricaMessage = (req, res) => {
     });
     
 }
+
+//onfon bal
+exports.onfonBal = (req, res) => {
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'https://api.onfonmedia.co.ke/v1/sms/Balance',
+    headers: { 
+      'AccessKey': '', 
+      'Content-Type': 'application/x-www-form-urlencoded', 
+      'Accept': 'application/json'
+    },
+    params: {
+      'ApiKey': '', 
+      'ClientId': '', 
+    }
+  };
+
+  axios.request(config)
+  .then((response) => {
+      res.send(response.data);
+  })
+  .catch((error) => {
+      res.status(500).send({ error: error });
+  });
+}
