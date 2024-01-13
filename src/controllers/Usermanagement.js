@@ -147,7 +147,7 @@ exports.signin = (req, res) => {
                         errorDesc: "Invalid details",
                         success:"0"
                     };
-                    return res.status(400).send(resObject);
+                    return res.status(200).send(resObject);
                 }
               });
             } else {
