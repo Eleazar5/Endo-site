@@ -12,7 +12,7 @@ const {
 }= process.env;
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:4200',
   optionsSuccessStatus: 200
 }));
 
