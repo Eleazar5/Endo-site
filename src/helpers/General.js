@@ -98,13 +98,9 @@ const sendEmail = (email, subject, mailbody, attachment) => {
 
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          res.json({
-            msg: 'fail'
-          })
+          console.log(err)
         } else {
-          res.json({
-            msg: 'success'
-          })
+          console.log("message send")
         }
     });
 }
