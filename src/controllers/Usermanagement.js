@@ -73,14 +73,14 @@ exports.signup = (req, res) => {
             errorDesc:"Email, First Name, Last Name and Password are required",
             success:"0"
         };
-        return res.status(400).send(resObject)
+        return res.status(200).send(resObject)
     }
     if(password.length < 6) {  
         const resObject = {
             errorDesc:"The password length should greater than 6",
             success:"0"
         };
-        return res.status(400).send(resObject) 
+        return res.status(200).send(resObject) 
     }
 
     //  check if user already exist
@@ -105,7 +105,7 @@ exports.signup = (req, res) => {
                 errorDesc: email+" is already registered",
                 success:"0"
             };
-            return res.status(400).send(resObject);
+            return res.status(200).send(resObject);
         }
        }
     });
@@ -118,44 +118,67 @@ exports.signin = (req, res) => {
     } = req.body;
     const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    var sql = "SELECT * FROM tb_users WHERE email= ? AND login_trials <= 5"
+    var sql = "SELECT * FROM tb_users WHERE email= ?"
     var values = [email];
     connection.query(sql, values, function(error,rows, fields){
         if(error) {
             return res.send("Error in signing the user");
         }else { 
             if(rows.length > 0) { 
-                bcrypt.compare(password, rows[0].password, function(error, result) {
-                if(result) {
-                    const authOTP = generateOTP();
-                    const subject = "Auth OTP";
-                    const mailbody = `<b>${authOTP}</b> is your verification code`
-                    sendEmail(email, subject, mailbody);
+                var sql1 = "SELECT * FROM tb_users WHERE email= ? AND login_trials <= 5"
+                var values1 = [email];
+                connection.query(sql1, values1, function(error,rows, fields){
+                    if(error) {
+                        return res.send("Error in signing the user");
+                    }else {
+                        if(rows.length > 0) {
+                            bcrypt.compare(password, rows[0].password, function(error, result) {
+                                if(result) {
+                                    const authOTP = generateOTP();
+                                    const subject = "Auth OTP";
+                                    const mailbody = `<b>${authOTP}</b> is your verification code`
+                                    sendEmail(email, subject, mailbody);
+                
+                                    const updateQuery = `UPDATE tb_users SET auth_otp =?, otp_createdat =? WHERE email=?`;
+                                    const updateValues = [authOTP, currentTime, email];
+                                    connection.query(updateQuery , updateValues, function(err, results){
+                                        const resObject = {
+                                            errorDesc: "An otp has been send to your email, confirm by inputing the otp",
+                                            success:"1"
+                                        };
+                                        return res.status(200).send(resObject)
+                                    });
+                                }
+                                else {
+                                    const updateQuery = `UPDATE tb_users SET login_trials =?, last_login =? WHERE email=?`;
+                                    const updatedLoginTrials = (rows[0].login_trials) + 1;
+                                    const updateValues = [updatedLoginTrials, currentTime, email];
 
-                    const updateQuery = `UPDATE tb_users SET auth_otp =?, otp_createdat =? WHERE email=?`;
-                    const updateValues = [authOTP, currentTime, email];
-                    connection.query(updateQuery , updateValues, function(err, results){
-                        const resObject = {
-                            errorDesc: "An otp has been send to your email, confirm by inputing the otp",
-                            success:"1"
-                        };
-                        return res.status(200).send(resObject)
-                    });
-                }
-                else {
-                    const resObject = {
-                        errorDesc: "Invalid details",
-                        success:"0"
-                    };
-                    return res.status(200).send(resObject);
-                }
-              });
+                                    connection.query(updateQuery , updateValues, function(err, results){
+                                        const resObject = {
+                                            errorDesc: "Invalid details",
+                                            success:"0"
+                                        };
+                                        return res.status(200).send(resObject);
+                                    });
+                                }
+                            });
+                        }else{
+                            const resObject = {
+                                errorDesc: "Too many attempts. Please try again after 5 minutes",
+                                success:"0"
+                            };
+                            return res.status(200).send(resObject);
+                        }
+                     }
+                    })
+               
             } else {
                 const resObject = {
-                    errorDesc: "Too many attempts. Please try again after 5 minutes",
+                    errorDesc: "User not found. Sign up to continue",
                     success:"0"
                 };
-                return res.status(400).send(resObject);
+                return res.status(200).send(resObject);
             } 
         }
     });
