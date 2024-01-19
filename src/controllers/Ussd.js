@@ -16,19 +16,19 @@ exports.ussd = (req, res) => {
   
     switch (text) {
       case '':
-        response = `CON Welcome to Alvare Stars
-        1. Register
-        2. Quit`;
+        response = `CON Welcome to Kitui West CDF
+        1. Apply for Education bursery 
+        2. Submit a project request
+        3. Apply for a sub county tender
+        4. Apply for soft loans
+        5. Talk to the office of the mp`;
         break;
       case '1':
         connection.query('SELECT * FROM tb_players WHERE tel = ? ', [phoneNumber], function (err, rows) {
           if (err) throw err;
           if (!rows.length) {
             response = `CON Choose your preferred position
-              1. Goalkeeper
-              2. Defender
-              3. Midfielder
-              4. Forward`;
+            1. Apply for Education bursery `;
           } else {
             response = `END The number is already registered`;
           }
