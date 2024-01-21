@@ -12,7 +12,7 @@ const {
 }= process.env;
 
 app.use(cors({
-  origin: 'http://192.168.0.100:4200',
+  origin: 'http://192.168.0.102:4200',
   optionsSuccessStatus: 200
 }));
 
