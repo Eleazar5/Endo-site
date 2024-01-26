@@ -300,7 +300,7 @@ exports.transaction_status = (req, res) => {
         Initiator: initiatorName,
         SecurityCredential: securityCredential(initiatorPassword),
         CommandID: "TransactionStatusQuery",
-        TransactionID: "RLF8A2QE10",
+        TransactionID: "SAM5PTOOK3",
         PartyA: SHORTCODE,
         IdentifierType: "4",
         ResultURL: `${sitebaseURL}/transactions/status_result`,
