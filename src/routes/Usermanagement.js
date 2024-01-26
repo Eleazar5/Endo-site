@@ -13,7 +13,8 @@ const {
 } = require('../controllers/Usermanagement');
 
 const {
-    authMiddleware
+    authMiddleware,
+    tokenVerify
 } = require('../validators/auth')
 
 const {
@@ -27,6 +28,7 @@ router.post('/sign_in', signin);
 router.post('/resend_otp', resendOtp);
 router.post('/confirm_otp', otpAuth);
 router.get('/users', authMiddleware, getusers);
+router.post('/authenticated', tokenVerify);
 router.get('/users_list', authMiddleware, getuserspagination);
 
 router.post('/file_upload', upload, uploadFile);
