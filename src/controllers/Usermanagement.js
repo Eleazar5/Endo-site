@@ -66,6 +66,7 @@ exports.signup = (req, res) => {
         email,
         firstname,
         lastname,
+        phone,
         password
     } = req.body;
     if(!email ||!firstname ||!lastname ||!password){
@@ -90,8 +91,8 @@ exports.signup = (req, res) => {
         return res.send("Error in getting "+email);
       }else{
         if (!rows.length){
-            const insertQuery = `INSERT INTO tb_users (email, firstname, lastname, password) VALUES (?, ?, ?, ?)`;
-            const insertValues = [email, firstname, lastname, bcrypt.hashSync(password, salt)];
+            const insertQuery = `INSERT INTO tb_users (email, firstname, lastname, phone_number, password) VALUES (?, ?, ?, ?)`;
+            const insertValues = [email, firstname, lastname, phone, bcrypt.hashSync(password, salt)];
             connection.query(insertQuery , insertValues, function(err, results){
                 const resObject = {
                     errorDesc: "Record has been created",
@@ -184,6 +185,86 @@ exports.signin = (req, res) => {
     });
 };
 
+//Login without otp
+exports.login = (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
+    const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    var sql = "SELECT * FROM tb_users WHERE email= ?"
+    var values = [email];
+    connection.query(sql, values, function(error,rows, fields){
+        if(error) {
+            return res.send("Error in signing the user");
+        }else { 
+            if(rows.length > 0) { 
+                var sql1 = "SELECT * FROM tb_users WHERE email= ? AND login_trials <= 5"
+                var values1 = [email];
+                connection.query(sql1, values1, function(error,rows, fields){
+                    if(error) {
+                        return res.send("Error in signing the user");
+                    }else {
+                        if(rows.length > 0) {
+                            bcrypt.compare(password, rows[0].password, function(error, result) {
+                                if(result) {
+                                    const authOTP = generateOTP();
+                                                   
+                                    const updateQuery = `UPDATE tb_users SET auth_otp =?, otp_createdat =? WHERE email=?`;
+                                    const updateValues = [authOTP, currentTime, email];
+                                    connection.query(updateQuery , updateValues, function(err, results){
+                                        const token = jwt.sign({email: email}, SECRETKEY, {expiresIn: 60 * 60 * 1});  //expires in 1 hour
+                                        const resObject = {
+                                            id: rows[0].id,
+                                            email: rows[0].email,
+                                            firstname: rows[0].firstname,
+                                            lastname: rows[0].lastname,
+                                            phone_number: rows[0].phone_number
+                                        };
+                                        req.session.isAuth = true;
+                                        return res.send({
+                                            user: resObject,
+                                            token: token, 
+                                            success:"1"
+                                        });
+                                    });
+                                }
+                                else {
+                                    const updateQuery = `UPDATE tb_users SET login_trials =?, last_login =? WHERE email=?`;
+                                    const updatedLoginTrials = (rows[0].login_trials) + 1;
+                                    const updateValues = [updatedLoginTrials, currentTime, email];
+
+                                    connection.query(updateQuery , updateValues, function(err, results){
+                                        const resObject = {
+                                            errorDesc: "Invalid details",
+                                            success:"0"
+                                        };
+                                        return res.status(200).send(resObject);
+                                    });
+                                }
+                            });
+                        }else{
+                            const resObject = {
+                                errorDesc: "Too many attempts. Please try again after 5 minutes",
+                                success:"0"
+                            };
+                            return res.status(200).send(resObject);
+                        }
+                     }
+                    })
+               
+            } else {
+                const resObject = {
+                    errorDesc: "User not found. Sign up to continue",
+                    success:"0"
+                };
+                return res.status(200).send(resObject);
+            } 
+        }
+    });
+};
+
 exports.resendOtp = (req, res) => {
     const {
         email
@@ -204,11 +285,6 @@ exports.resendOtp = (req, res) => {
                         return res.send("Error in signing the user");
                     }else {
                         if(rows.length > 0) {
-                            const authOTP = generateOTP();
-                            const subject = "Auth OTP";
-                            const mailbody = `<b>${authOTP}</b> is your verification code`
-                            sendEmail(email, subject, mailbody);
-        
                             const updateQuery = `UPDATE tb_users SET auth_otp =?, otp_createdat =? WHERE email=?`;
                             const updateValues = [authOTP, currentTime, email];
                             connection.query(updateQuery , updateValues, function(err, results){
