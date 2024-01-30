@@ -5,6 +5,7 @@ const {
     updateAuthCrons,
     signup,
     signin,
+    login,
     resendOtp,
     otpAuth,
     getusers,
@@ -25,6 +26,7 @@ updateAuthCrons();
 
 router.post('/sign_up', signup);
 router.post('/sign_in', signin);
+router.post('/login', login);
 router.post('/resend_otp', resendOtp);
 router.post('/confirm_otp', otpAuth);
 router.get('/users', authMiddleware, getusers);

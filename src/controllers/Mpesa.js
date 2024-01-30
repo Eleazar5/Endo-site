@@ -104,7 +104,6 @@ exports.stkpush = (req, res) => {
     .post(stkurl, data, { headers })
     .then(response => {
         res.send(response.data)
-        console.log(data.CallBackURL)
     })
     .catch((error) => console.log(error))
 }
@@ -112,8 +111,7 @@ exports.stkpush = (req, res) => {
 //MPESA call back
 exports.callbackurl = (req, res) => {
     const {company} = req.params;
-    console.log(company)
-
+    console.log(req.body)
     const callbackData = req.body.Body?.stkCallback;
     console.log(callbackData)
     
