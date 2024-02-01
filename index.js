@@ -11,10 +11,17 @@ const {
   SERVER_HOST 
 }= process.env;
 
-app.use(cors({
-  origin: 'http://localhost:4200',
+// app.use(cors({
+//   origin: 'http://localhost:4200',
+//   optionsSuccessStatus: 200
+// }));
+
+const corsOptions = {
+  origin: ['http://localhost:4200', 'http://localhost:8100'],
   optionsSuccessStatus: 200
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(session({
   secret: 'block_density',
