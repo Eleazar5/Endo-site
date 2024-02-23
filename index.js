@@ -11,13 +11,13 @@ const {
   SERVER_HOST 
 }= process.env;
 
-// app.use(cors({
-//   origin: 'http://localhost:4200',
+// const corsOptions = {
+//   origin: ['http://localhost:4200', 'http://localhost:8100'],
 //   optionsSuccessStatus: 200
-// }));
+// };
 
 const corsOptions = {
-  origin: ['http://localhost:4200', 'http://localhost:8100'],
+  origin: '*',
   optionsSuccessStatus: 200
 };
 
@@ -43,10 +43,10 @@ const ussdroute = require('./src/routes/Ussd');
 app.use('/transactions', mpesaroute)
 app.use('/momo', momoroute)
 app.use('/message', messages)
-app.use('/notifications', notificationroute)
 app.use('/auth', usermanagement)
 app.use('/api', generaldataroute)
 app.use('/ussdapi', ussdroute)
+app.use('/webhook', notificationroute);
 
 app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
   if (err) {

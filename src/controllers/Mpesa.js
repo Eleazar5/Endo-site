@@ -298,11 +298,11 @@ exports.transaction_status = (req, res) => {
         Initiator: initiatorName,
         SecurityCredential: securityCredential(initiatorPassword),
         CommandID: "TransactionStatusQuery",
-        TransactionID: "SAM5PTOOK3",
+        TransactionID: "SBF37QDY9J",
         PartyA: SHORTCODE,
         IdentifierType: "4",
         ResultURL: `${sitebaseURL}/transactions/status_result`,
-        QueueTimeOutURL: `${sitebaseURL}/transactions/timeout_status_result`,
+        QueueTimeOutURL: `${sitebaseURL}/transactions/timeout_result`,
         Remarks: "OK",
         Occasion:"OK"
     }
@@ -366,7 +366,7 @@ exports.transaction_status_result = (req, res) => {
 
 exports.timeout_status_result = (req, res) => {
     console.log(JSON.stringify(req.body))
-    res.send("Transaction Failed")
+    res.send("Transaction Time out")
 }
 
 // Reverse transaction

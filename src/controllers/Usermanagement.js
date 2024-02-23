@@ -11,7 +11,8 @@ const {
     validateOTP,
     sendEmail,
     appendToLogFile,
-    runScriptFile
+    runScriptFile,
+    handleNewData
 } = require('../helpers/General');
 
 const { 
@@ -223,6 +224,7 @@ exports.login = (req, res) => {
                                             phone_number: rows[0].phone_number
                                         };
                                         req.session.isAuth = true;
+                                        handleNewData({message: `${resObject.firstname} logged in successfully`})
                                         return res.send({
                                             user: resObject,
                                             token: token, 
