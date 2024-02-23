@@ -39,6 +39,7 @@ const notificationroute = require('./src/routes/Notifications');
 const usermanagement = require('./src/routes/Usermanagement');
 const generaldataroute = require('./src/routes/General_Data');
 const ussdroute = require('./src/routes/Ussd');
+const whatsapproute = require('./src/routes/Whatsapp');
 
 app.use('/transactions', mpesaroute)
 app.use('/momo', momoroute)
@@ -47,6 +48,7 @@ app.use('/auth', usermanagement)
 app.use('/api', generaldataroute)
 app.use('/ussdapi', ussdroute)
 app.use('/webhook', notificationroute);
+app.use('/whatsapp', whatsapproute);
 
 app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
   if (err) {
