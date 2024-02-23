@@ -3,12 +3,14 @@ const nodeMailer = require('nodemailer');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const multer = require('multer')
+const multer = require('multer');
+const axios = require('axios');
 
 const {
     mailUser,
     mailPass,
-    saveActiviyLogs
+    saveActiviyLogs,
+    sitebaseURL
 } = process.env;
 
 //Create file logs
@@ -109,7 +111,7 @@ const sendEmail = (email, subject, mailbody, attachment) => {
 //Upload image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '..', 'library/images'))
+    cb(null, path.join(__dirname, '..', 'library/files'))
   },
   filename: (req, file, cb) => {
     console.log(file)
@@ -119,6 +121,26 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage}).single("endofile");
 
+
+const handleNewData = (newData) => {  
+  let config = {
+    method: 'post',
+    url: `${sitebaseURL}/webhook`,
+    headers: { 
+      'Content-Type': 'application/json', 
+    },
+    data : newData
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
 module.exports = {
     transformPhoneNumber,
     generateOTP,
@@ -126,5 +148,6 @@ module.exports = {
     sendEmail,
     appendToLogFile,
     runScriptFile,
-    upload
+    upload,
+    handleNewData
 }

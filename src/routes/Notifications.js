@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    getwebhook,
-    postwebhook
+    getwebhook
 } = require('../controllers/Notifications');
-router.get('/webhook', getwebhook);
-router.post('/webhook', postwebhook);
+router.post('/', getwebhook);
 
 module.exports =router;
