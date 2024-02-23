@@ -1,6 +1,11 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const { version } = require("../../package.json");
+require('dotenv').config();
+
+const {
+  sitebaseURL
+} = process.env;
 
 const options = {
   definition: {
@@ -321,5 +326,5 @@ exports.swaggerDocs = (app, port) => {
   });
   
 
-  console.log(`Docs available at http://localhost:${port}/docs`);
+  console.log(`Docs available at ${sitebaseURL}/docs`);
 }
