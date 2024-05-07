@@ -115,11 +115,11 @@ exports.callbackurl = (req, res) => {
     const callbackData = req.body.Body?.stkCallback;
     console.log(callbackData)
     
-    const paid_amt = callbackData.CallbackMetadata.Item[0].Value;
-    const trans_number = callbackData.CallbackMetadata.Item[1].Value;
-    const trans_date1 = callbackData.CallbackMetadata.Item[3].Value;
-    const paying_phone = callbackData.CallbackMetadata.Item[4].Value;
-    const checkoutId = callbackData.CheckoutRequestID;
+    const paid_amt = callbackData?.CallbackMetadata.Item[0].Value;
+    const trans_number = callbackData?.CallbackMetadata.Item[1].Value;
+    const trans_date1 = callbackData?.CallbackMetadata.Item[3].Value;
+    const paying_phone = callbackData?.CallbackMetadata.Item[4].Value;
+    const checkoutId = callbackData?.CheckoutRequestID;
 
     const trans_date = trans_date1.toString();
 
