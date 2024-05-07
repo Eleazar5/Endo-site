@@ -30,6 +30,7 @@ router.post('/login', login);
 router.post('/resend_otp', resendOtp);
 router.post('/confirm_otp', otpAuth);
 router.get('/users', authMiddleware, getusers);
+router.get('/user', getusers);
 router.post('/authenticated', tokenVerify);
 router.get('/users_list', authMiddleware, getuserspagination);
 

@@ -100,8 +100,9 @@ exports.generateAccessToken = (req, res, next) => {
 exports.requestToPay = (req, res) => {
     const token = req.token;
     const url = `https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay`;
+    const payId = uuidv4()
     const headers = { 
-        'X-Reference-id': momo_X_Reference_id,
+        'X-Reference-id': payId,
         'X-Target-Environment': momo_Target_Env,
         'Ocp-Apim-Subscription-Key': momo_Ocp_Apim_Subscription_Key,
         'Authorization': 'Bearer ' + token
