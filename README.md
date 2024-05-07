@@ -40,4 +40,13 @@ sitebaseURL = "https://94a0-197-248-82-61.ngrok-free.app"
 npm install 
 npm start or npm run dev
 ```
+```
+momo_apikey = "430a578a0fae4afaadfc4b96f4d89b6f"
+momo_Ocp_Apim_Subscription_Key = '1b8492b3832d44fdae0274aa3fa7db1d' #Primary Key
+momo_X_Reference_id = '62fea989-756f-4a04-a66b-df8b2c1dbbab'
+momo_Target_Env='sandbox'
+
+bankenvironment='sandbox'
+merchantcode='7716736835'
+```
 ***Happy Coding***
