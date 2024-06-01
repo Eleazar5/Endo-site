@@ -4,7 +4,7 @@ const router = express.Router();
 const {
     authToken,
     accountBalance
-} = require('../controllers/Bank');
+} = require('../controllers/Airtel');
 router.post('/account_balance', authToken, accountBalance);
 
 module.exports =router;
