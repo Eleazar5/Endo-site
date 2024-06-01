@@ -1,4 +1,3 @@
-const datetime = require('node-datetime');
 const axios = require('axios');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -9,6 +8,7 @@ const {
     merchantcode
 }= process.env;
 let bankURL;
+let tokenbankURL;
 
 if(bankenvironment == "live"){
     bankURL = "https://api.finserve.africa/v3-apis/account-api/v3.0";
@@ -72,6 +72,7 @@ exports.authToken = (req, res) => {
 
 //get account balance
 exports.accountBalance = (req, res) => {
+    const access_token = req.token;
     const {
         countryCode,
         accountId,
@@ -88,7 +89,7 @@ exports.accountBalance = (req, res) => {
         method: 'post',
         url: `${bankURL}/accounts/accountBalance/query`,
         headers: { 
-          'Authorization': 'Bearer {access_token}', 
+          'Authorization': `Bearer ${access_token}`, 
           'Content-Type': 'application/json', 
           'signature': signature(countryCode, accountId, date)
         },

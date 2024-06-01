@@ -40,7 +40,8 @@ const usermanagement = require('./src/routes/Usermanagement');
 const generaldataroute = require('./src/routes/General_Data');
 const ussdroute = require('./src/routes/Ussd');
 const whatsapproute = require('./src/routes/Whatsapp');
-const bankroute = require('./src/routes/Bank');
+const equitybankroute = require('./src/routes/Bank');
+const airtelmoneyroute = require('./src/routes/Airtel');
 
 app.use('/transactions', mpesaroute);
 app.use('/momo', momoroute);
@@ -48,9 +49,10 @@ app.use('/message', messages);
 app.use('/auth', usermanagement);
 app.use('/api', generaldataroute);
 app.use('/ussdapi', ussdroute);
-app.use('/webhook', notificationroute);
+app.use('/notifications', notificationroute);
 app.use('/whatsapp', whatsapproute);
-app.use('/bank', bankroute);
+app.use('/equitybank', equitybankroute);
+app.use('/airtelmoney', airtelmoneyroute);
 
 app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
   if (err) {
