@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const {swaggerDocs} = require('./src/utils/swagger');
+const path = require('path');
 
 require('dotenv').config();
 const { 
@@ -31,6 +32,9 @@ app.use(session({
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
+const uploadDir = path.join(__dirname, 'src/library/images');
+app.use('/images', express.static(uploadDir));
 
 const mpesaroute = require('./src/routes/Mpesa');
 const momoroute = require('./src/routes/Momo-integration');

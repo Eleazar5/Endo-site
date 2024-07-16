@@ -5,12 +5,19 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const axios = require('axios');
+const ping = require('ping');
+const PDFDocument = require('pdfkit');
 
 const {
     mailUser,
     mailPass,
     saveActiviyLogs,
-    sitebaseURL
+    sitebaseURL,
+    organization,
+    emailuser,
+    emailusertitle,
+    orgsite,
+    orgphone
 } = process.env;
 
 //Create file logs
@@ -47,10 +54,8 @@ const runScriptFile = (command, scriptmsg) => {
 const transformPhoneNumber = (input) => {
     // Remove all spaces from the input string
     const stringWithoutSpaces = input.replace(/ /g, '');
-  
     // Take the last 9 characters
     const transformedString = stringWithoutSpaces.slice(-9);
-  
     return transformedString;
 }
 
@@ -58,6 +63,10 @@ const transformPhoneNumber = (input) => {
 const generateOTP = () => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     return otp.toString();
+}
+
+const capitalizeFirstLetter = (wordtotransform) => {
+  return wordtotransform.charAt(0).toUpperCase() + wordtotransform.slice(1);
 }
 
 const validateOTP = (userEmail, otpCreatedAt, expirationTimeInMinutes) => {
@@ -83,10 +92,30 @@ const transporter = nodeMailer.createTransport({
 
 const sendEmail = (email, subject, mailbody, attachment) => {
     const uploadDir = path.join(__dirname, '..', 'library/images');
+    
+    const footerSignature = `
+      <br><br>
+      <div style="display: flex; align-items: center;">
+          <div style="display: flex; flex: 1; align-items: center;">
+              <!-- Text only, no logo -->
+              <div style="flex: 1 1 auto;">
+                  <div class="text">
+                      <strong><span style="color: #007bff;">${emailuser}</span></strong><br>
+                      <strong>${emailusertitle}</strong><br>
+                      <strong>${organization}</strong><br>
+                      <a href="tel:254${transformPhoneNumber(orgphone)}">${orgphone}</a><br>
+                      <a href="${orgsite}">${orgsite}</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <br>
+    `;
+    const completeMailBody = `${mailbody}${footerSignature}`;
     const mailOptions = {
         to: email,
         subject: subject,
-        html: mailbody
+        html: completeMailBody
     };
 
     if (attachment) {
@@ -114,7 +143,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, '..', 'library/files'))
   },
   filename: (req, file, cb) => {
-    console.log(file)
+    // console.log(file)
     cb(null, Date.now() +path.extname(file.originalname))
   }
 })
@@ -141,13 +170,145 @@ const handleNewData = (newData) => {
   });
 }
 
+const fileToBase64Converter = (filePath) => {  
+  const base64encoded = fs.readFileSync(filePath, {encoding: 'base64'});
+  return JSON.stringify(base64encoded);
+}
+
+const pingToTestServer = async (host) => {
+  try {
+    const res = await ping.promise.probe(host);
+    if (res.alive) {
+      return JSON.stringify({
+        server_status: "Ok",
+        server_res: `${host} is alive`,
+        server_host: res.numeric_host
+      });
+    } else {
+      return JSON.stringify({
+        server_status: "Fail",
+        server_res: `${host} is not reachable`
+      });
+    }
+  } catch (error) {
+    return JSON.stringify({
+      server_status: "Error",
+      server_res: error.message
+    });
+  }
+};
+
+//Generate new pdf
+const generateNewPDF = (req, res) => {
+  // Create a document
+  const imagePath = path.join(__dirname, '..', 'library/images/facebook.png');
+  const doc = new PDFDocument();
+
+  // Set response headers
+  res.setHeader('Content-Type', 'application/pdf');
+
+  // To download direct without preview uncomment this
+  // res.setHeader('Content-Disposition', 'attachment; filename=example.pdf');
+  // doc.pipe(res);
+
+  // Adding functionality
+  doc
+      .fontSize(47)
+      .text('This the article for GeeksforGeeks', 100, 100);
+
+  // Adding an image in the pdf.
+  doc.image(imagePath, {
+      fit: [300, 300],
+      align: 'center',
+      valign: 'center'
+  });
+
+  doc
+      .addPage()
+      .fontSize(15)
+      .text('Generating PDF with the help of pdfkit', 100, 100);
+
+  // Apply some transforms and render an SVG path
+  doc
+      .scale(0.6)
+      .translate(470, -380)
+      .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
+      .fill('red', 'even-odd')
+      .restore();
+
+  // Add some text with annotations
+  doc
+      .addPage()
+      .fillColor('blue')
+      .text('The link for GeeksforGeeks website', 100, 100)
+      .link(100, 100, 160, 27, 'https://www.geeksforgeeks.org/');
+
+  // Finalize PDF file
+  doc.pipe(res);
+  doc.end();
+};
+
+const generateNewPDFBase64 = (title = '', message1 = '', message2 = '', imagePath = '') => {
+  return new Promise((resolve, reject) => {
+      const doc = new PDFDocument();
+      const chunks = [];
+
+      if (title) {
+          doc.fontSize(27).text(title, 100, 100);
+      }
+
+      if (message1) {
+          doc.fontSize(18).text(message1, 100, 150);
+      }
+
+      if (message2) {
+          doc.fontSize(18).text(message2, 100, 200);
+      }
+
+      if (imagePath) {
+          doc.image(imagePath, {
+              fit: [300, 300],
+              align: 'center',
+              valign: 'center'
+          });
+      }
+
+      if (message1) {
+        doc
+        .addPage()
+        .fontSize(18).text(message1, 100, 150);
+      }
+
+      doc.on('data', chunk => {
+          chunks.push(chunk);
+      });
+
+      doc.on('end', () => {
+          const result = Buffer.concat(chunks).toString('base64');
+          resolve(result);
+      });
+
+      doc.end();
+  });
+};
+
+
+module.exports = {
+  generateNewPDF
+};
+
 module.exports = {
     transformPhoneNumber,
+    capitalizeFirstLetter,
     generateOTP,
     validateOTP,
     sendEmail,
     appendToLogFile,
     runScriptFile,
     upload,
-    handleNewData
+    handleNewData,
+    fileToBase64Converter,
+    pingToTestServer,
+    generateNewPDF,
+    generateNewPDFBase64
 }
