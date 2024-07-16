@@ -7,12 +7,14 @@ const moment = require("moment");
 const cron = require('node-cron');
 const {
     transformPhoneNumber,
+    capitalizeFirstLetter,
     generateOTP,
     validateOTP,
     sendEmail,
     appendToLogFile,
     runScriptFile,
-    handleNewData
+    handleNewData,
+    fileToBase64Converter
 } = require('../helpers/General');
 
 const { 
@@ -138,7 +140,7 @@ exports.signin = (req, res) => {
                                 if(result) {
                                     const authOTP = generateOTP();
                                     const subject = "Auth OTP";
-                                    const mailbody = `<b>${authOTP}</b> is your verification code`
+                                    const mailbody = `Hi ${capitalizeFirstLetter(rows[0].firstname)}, <b>${authOTP}</b> is your verification code`
                                     sendEmail(email, subject, mailbody);
                 
                                     const updateQuery = `UPDATE tb_users SET auth_otp =?, otp_createdat =? WHERE email=?`;
@@ -424,4 +426,13 @@ exports.uploadFile = (req, res) => {
     const filename = req.file.filename;
     console.log(filename);
     res.send(filename);
+};
+
+exports.uploadAndConvertFile = (req, res) => {
+    const fileBase64 = fileToBase64Converter(req.file.path);
+    const fileObject = {
+        base64Code: fileBase64
+    };
+    const dataUri = `data:${req.file.mimetype};base64,${fileBase64}`;
+    res.status(200).send(dataUri);
 };

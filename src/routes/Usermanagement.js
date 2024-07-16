@@ -10,7 +10,8 @@ const {
     otpAuth,
     getusers,
     getuserspagination,
-    uploadFile
+    uploadFile,
+    uploadAndConvertFile
 } = require('../controllers/Usermanagement');
 
 const {
@@ -35,5 +36,6 @@ router.post('/authenticated', tokenVerify);
 router.get('/users_list', authMiddleware, getuserspagination);
 
 router.post('/file_upload', upload, uploadFile);
+router.post('/file_upload_base64convert', upload, uploadAndConvertFile);
 
 module.exports =router;
