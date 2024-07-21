@@ -94,7 +94,7 @@ exports.signup = (req, res) => {
         return res.send("Error in getting "+email);
       }else{
         if (!rows.length){
-            const insertQuery = `INSERT INTO tb_users (email, firstname, lastname, phone_number, password) VALUES (?, ?, ?, ?)`;
+            const insertQuery = `INSERT INTO tb_users (email, firstname, lastname, phone_number, password) VALUES (?, ?, ?, ?, ?)`;
             const insertValues = [email, firstname, lastname, phone, bcrypt.hashSync(password, salt)];
             connection.query(insertQuery , insertValues, function(err, results){
                 const resObject = {
