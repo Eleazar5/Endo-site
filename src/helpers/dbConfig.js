@@ -54,6 +54,54 @@ CREATE TABLE IF NOT EXISTS tb_players (
   )
 `;
 
+const createCustomersTable = `
+CREATE TABLE IF NOT EXISTS tb_customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(200) NOT NULL,
+    firstname VARCHAR(200) DEFAULT NULL,
+    lastname VARCHAR(200) DEFAULT NULL,
+    phone_number VARCHAR(200) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    update_at DATETIME NOT NULL DEFAULT current_timestamp()
+  )
+`;
+
+const createVendorsTable = `
+CREATE TABLE IF NOT EXISTS tb_vendors (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(200) NOT NULL,
+    firstname VARCHAR(200) DEFAULT NULL,
+    lastname VARCHAR(200) DEFAULT NULL,
+    phone_number VARCHAR(200) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    update_at DATETIME NOT NULL DEFAULT current_timestamp()
+  )
+`;
+
+const createSalesTable = `
+CREATE TABLE IF NOT EXISTS tb_sales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customername VARCHAR(200) DEFAULT NULL,
+    phone_number VARCHAR(200) DEFAULT NULL,
+    item_name VARCHAR(200) DEFAULT NULL,
+    quantity VARCHAR(200) DEFAULT NULL,
+    sale_amount int(11) NOT NULL DEFAULT 0,
+    payment_mode VARCHAR(200) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    update_at DATETIME NOT NULL DEFAULT current_timestamp()
+  )
+`;
+
+const createProductsTable = `
+CREATE TABLE IF NOT EXISTS tb_products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    productname VARCHAR(200) DEFAULT NULL,
+    unit_price int(11) NOT NULL DEFAULT 0,
+    total_quantity VARCHAR(200) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    update_at DATETIME NOT NULL DEFAULT current_timestamp()
+  )
+`;
 // Execute queries for table creation
 pool.query(createMpesaTransactionsTable, (error, results) => {
   if (error) throw error;
@@ -68,6 +116,26 @@ pool.query(createUsersTable, (error, results) => {
 pool.query(createPlayersTable, (error, results) => {
     if (error) throw error;
     return;
+});
+
+pool.query(createCustomersTable, (error, results) => {
+  if (error) throw error;
+  return;
+});
+
+pool.query(createVendorsTable, (error, results) => {
+  if (error) throw error;
+  return;
+});
+
+pool.query(createSalesTable, (error, results) => {
+  if (error) throw error;
+  return;
+});
+
+pool.query(createProductsTable, (error, results) => {
+  if (error) throw error;
+  return;
 });
 
 module.exports = pool;

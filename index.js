@@ -46,6 +46,7 @@ const ussdroute = require('./src/routes/Ussd');
 const whatsapproute = require('./src/routes/Whatsapp');
 const equitybankroute = require('./src/routes/Bank');
 const airtelmoneyroute = require('./src/routes/Airtel');
+const ruwenzoriroute = require('./src/routes/Ruwenzori');
 
 app.use('/transactions', mpesaroute);
 app.use('/momo', momoroute);
@@ -57,6 +58,7 @@ app.use('/notifications', notificationroute);
 app.use('/whatsapp', whatsapproute);
 app.use('/equitybank', equitybankroute);
 app.use('/airtelmoney', airtelmoneyroute);
+app.use('/ruwenzori', ruwenzoriroute);
 
 app.listen({ port: SERVER_PORT, host: SERVER_HOST }, err => {
   if (err) {
