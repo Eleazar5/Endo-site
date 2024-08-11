@@ -340,7 +340,7 @@ exports.otpAuth = (req, res) => {
                     const updateValues = [currentTime, email];
                     
                     connection.query(updateQuery , updateValues, function(err, results){
-                        const token = jwt.sign({email: email}, SECRETKEY, {expiresIn: 60 * 60 * 1});  //expires in 1 hour
+                        const token = jwt.sign({email: email}, SECRETKEY, {expiresIn: 60 * 60 * 10});  //expires in 10 hours
                         const resObject = {
                             id: rows[0].id,
                             email: rows[0].email,
