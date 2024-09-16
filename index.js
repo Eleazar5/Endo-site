@@ -9,7 +9,8 @@ const path = require('path');
 require('dotenv').config();
 const { 
   SERVER_PORT,
-  SERVER_HOST 
+  SERVER_HOST,
+  DBTYPE
 }= process.env;
 
 // const corsOptions = {
@@ -40,13 +41,40 @@ const mpesaroute = require('./src/routes/Mpesa');
 const momoroute = require('./src/routes/Momo-integration');
 const messages = require('./src/routes/Messages');
 const notificationroute = require('./src/routes/Notifications');
-const usermanagement = require('./src/routes/Usermanagement');
 const generaldataroute = require('./src/routes/General_Data');
-const ussdroute = require('./src/routes/Ussd');
-const whatsapproute = require('./src/routes/Whatsapp');
 const equitybankroute = require('./src/routes/Bank');
 const airtelmoneyroute = require('./src/routes/Airtel');
-const ruwenzoriroute = require('./src/routes/Ruwenzori');
+
+let usermanagement;
+let ruwenzoriroute;
+let ussdroute;
+let whatsapproute;
+
+switch(DBTYPE) {
+  case 'mysql':
+    usermanagement = require('./src/routes/mySQL/Usermanagement');
+    ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
+    ussdroute = require('./src/routes/mySQL/Ussd');
+    whatsapproute = require('./src/routes/mySQL/Whatsapp');
+    break;
+  case 'postgres':
+    usermanagement = require('./src/routes/mySQL/Usermanagement');
+    ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
+    ussdroute = require('./src/routes/mySQL/Ussd');
+    whatsapproute = require('./src/routes/mySQL/Whatsapp');
+    break;
+  case 'mongo':
+    usermanagement = require('./src/routes/mySQL/Usermanagement');
+    ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
+    ussdroute = require('./src/routes/mySQL/Ussd');
+    whatsapproute = require('./src/routes/mySQL/Whatsapp');
+    break;
+  default:
+    usermanagement = require('./src/routes/mySQL/Usermanagement');
+    ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
+    ussdroute = require('./src/routes/mySQL/Ussd');
+    whatsapproute = require('./src/routes/mySQL/Whatsapp');
+}
 
 app.use('/transactions', mpesaroute);
 app.use('/momo', momoroute);

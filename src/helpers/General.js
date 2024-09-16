@@ -34,6 +34,17 @@ const appendToLogFile = (log) => {
     }    
 }
 
+//Create file logs
+const appendToLogFileNewUsers = (log) => {
+  const logMessage = `${log} \n`;
+  const logsFilePath = path.join(__dirname, '..', 'library/activity_logs', `Users.txt`);
+  if(saveActiviyLogs == "true"){
+      fs.appendFile(logsFilePath, logMessage, function (err) {
+          if (err) throw err;
+      });
+  }    
+}
+
 //Run script files
 const runScriptFile = (command, scriptmsg) => {  
   exec(command, (error, stdout, stderr) => {
@@ -292,9 +303,24 @@ const generateNewPDFBase64 = (title = '', message1 = '', message2 = '', imagePat
   });
 };
 
-
-module.exports = {
-  generateNewPDF
+//Get My currect public ip
+const getPublicIP = async () => {
+  let config = {
+    method: 'get',
+    url: 'https://api.ipify.org?format=json',
+    headers: { 
+      'Content-Type': 'application/json'
+    }
+  };
+  
+  try {
+    const response = await axios.request(config);
+    const ip = response.data.ip;
+    return ip; 
+  } catch (error) {
+    console.error('Error fetching public IP:', error);
+    throw error;
+  }
 };
 
 module.exports = {
@@ -304,11 +330,13 @@ module.exports = {
     validateOTP,
     sendEmail,
     appendToLogFile,
+    appendToLogFileNewUsers,
     runScriptFile,
     upload,
     handleNewData,
     fileToBase64Converter,
     pingToTestServer,
     generateNewPDF,
-    generateNewPDFBase64
+    generateNewPDFBase64,
+    getPublicIP
 }

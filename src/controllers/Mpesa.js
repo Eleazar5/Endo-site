@@ -3,7 +3,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const connection = require('../helpers/dbConfig');
+// const connection = require('../helpers/dbConfig');
 
 const { 
     PASSKEY,
@@ -132,24 +132,24 @@ exports.callbackurl = (req, res) => {
 
     const formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 
-    const inserttrans = 'INSERT INTO tb_mpesa_transactions SET ?';
-    var new_trans_data = {
-        phone_number: paying_phone,
-        transaction: trans_number,
-        amount: paid_amt,
-        date_created: formattedDate,
-        account_no: company
-    };
-    console.log(new_trans_data)
+    // const inserttrans = 'INSERT INTO tb_mpesa_transactions SET ?';
+    // var new_trans_data = {
+    //     phone_number: paying_phone,
+    //     transaction: trans_number,
+    //     amount: paid_amt,
+    //     date_created: formattedDate,
+    //     account_no: company
+    // };
+    // console.log(new_trans_data)
 
-    connection.query(inserttrans ,[new_trans_data], function (error, results, fields) {
-    if (error) {
-        res.status(500).send({ message: error.message });
-    }
-        res.status(200).send({
-        message: `transaction added`
-        });
-    })
+    // connection.query(inserttrans ,[new_trans_data], function (error, results, fields) {
+    // if (error) {
+    //     res.status(500).send({ message: error.message });
+    // }
+    //     res.status(200).send({
+    //     message: `transaction added`
+    //     });
+    // })
 }
 
 //REGISTER URL FOR C2B

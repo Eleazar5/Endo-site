@@ -7,6 +7,8 @@ const {
 const {
     generateNewPDFBase64
 } = require('../helpers/General')
+const pdf = require('pdf-parse');
+const fs = require('fs');
 
 //get all countries
 exports.worldCountries = (req, res) => {
@@ -66,9 +68,46 @@ exports.generatePDFandExportBase64 = async (req, res) => {
         
         const base64String = await generateNewPDFBase64(title, message1, message2, filePath);
         const dataUri = `data:application/pdf;base64,${base64String}`;
-        res.status(200).send(dataUri);
+        //const dataUri = base64String;
+        const resObject = {
+            src: dataUri
+        };
+        res.status(200).send(resObject);
     } catch (error) {
         console.error('Error generating PDF:', error);
         res.status(500).send('Error generating PDF');
     }
+};
+
+exports.simplePdfUpload = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const filePath = req?.file?.path;
+    
+    let dataBuffer = fs.readFileSync(filePath);
+
+    pdf(dataBuffer).then(function (data) {
+        let cleanedText = data.text
+                .replace(/\/\/+/g, '') // Remove unwanted characters
+                .replace(/\n+/g, ' ')  // Replace newlines with a space
+                .replace(//g, '•')      // Replace bullet character with dot bullet
+                .trim();               // Trim any leading/trailing whitespace
+        let jsonData = {
+            numPages: data.numpages,
+            numRenders: data.numrender,
+            text: cleanedText,
+            info: data.info,
+            metadata: data.metadata
+        };
+
+        // Send the entire extracted data as JSON response
+        res.send(jsonData.text);
+
+        fs.unlinkSync(filePath);
+
+    }).catch(function (error) {
+        console.error('Error reading PDF:', error);
+        res.status(500).json({ error: 'Error processing PDF' });
+    });
 };

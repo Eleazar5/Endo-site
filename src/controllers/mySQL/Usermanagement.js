@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const connection = require('../helpers/dbConfig');
+const connection = require('../../helpers/mysqlConfig');
 const salt = bcrypt.genSaltSync(10);
 const jwt = require('jsonwebtoken');
 const moment = require("moment");
 const cron = require('node-cron');
+const geoip = require('geoip-lite');
+
 const {
     transformPhoneNumber,
     capitalizeFirstLetter,
@@ -12,10 +14,12 @@ const {
     validateOTP,
     sendEmail,
     appendToLogFile,
+    appendToLogFileNewUsers,
     runScriptFile,
     handleNewData,
-    fileToBase64Converter
-} = require('../helpers/General');
+    fileToBase64Converter,
+    getPublicIP
+} = require('../../helpers/General');
 
 const { 
     DB_USER,
@@ -189,7 +193,7 @@ exports.signin = (req, res) => {
 };
 
 //Login without otp
-exports.login = (req, res) => {
+exports.login = async(req, res) => {
     const {
         email,
         password
@@ -221,18 +225,30 @@ exports.login = (req, res) => {
                                         const resObject = {
                                             id: rows[0].id,
                                             email: rows[0].email,
-                                            firstname: rows[0].firstname,
-                                            lastname: rows[0].lastname,
+                                            firstname: capitalizeFirstLetter(rows[0].firstname),
+                                            lastname: capitalizeFirstLetter(rows[0].lastname),
                                             phone_number: rows[0].phone_number
                                         };
                                         req.session.isAuth = true;
-                                        handleNewData({message: `${resObject.firstname} logged in successfully`})
-                                        return res.send({
-                                            user: resObject,
-                                            token: token, 
-                                            success:"1"
+
+                                        getPublicIP().then(ip => {
+                                            const geo = geoip.lookup(ip);
+                                            let geoData = {};
+                                            if (geo) {
+                                                geoData = {
+                                                country: geo.country,
+                                                region: geo.region,
+                                                city: geo.city,
+                                                ll: [geo.ll[0], geo.ll[1]]
+                                                };
+                                            } 
+                                            return res.send({
+                                                user: resObject,
+                                                token: token, 
+                                                success:"1",
+                                                location: geoData                                        });
+                                            });
                                         });
-                                    });
                                 }
                                 else {
                                     const updateQuery = `UPDATE tb_users SET login_trials =?, last_login =? WHERE email=?`;
@@ -284,6 +300,11 @@ exports.resendOtp = (req, res) => {
             if(rows.length > 0) { 
                 var sql1 = "SELECT * FROM tb_users WHERE email= ? AND login_trials <= 5"
                 var values1 = [email];
+                const authOTP = generateOTP();
+                const subject = "Auth OTP";
+                const mailbody = `Hi ${capitalizeFirstLetter(rows[0].firstname)}, <b>${authOTP}</b> is your verification code`
+                sendEmail(email, subject, mailbody);
+                
                 connection.query(sql1, values1, function(error,rows, fields){
                     if(error) {
                         return res.send("Error in signing the user");
@@ -436,3 +457,22 @@ exports.uploadAndConvertFile = (req, res) => {
     const dataUri = `data:${req.file.mimetype};base64,${fileBase64}`;
     res.status(200).send(dataUri);
 };
+
+exports.signupTest = (req, res) => {
+    const {
+        email,
+        firstname,
+        lastname,
+        phone,
+        password
+    } = req.body;
+    const useerData = {
+        email: email,
+        firstname: firstname,
+        lastname: lastname,
+        phone: phone,
+        password: password
+    }
+    appendToLogFileNewUsers(JSON.stringify(useerData))
+    res.status(200).send(useerData);
+}
