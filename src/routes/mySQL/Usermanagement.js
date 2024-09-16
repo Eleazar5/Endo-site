@@ -11,21 +11,23 @@ const {
     getusers,
     getuserspagination,
     uploadFile,
-    uploadAndConvertFile
-} = require('../controllers/Usermanagement');
+    uploadAndConvertFile,
+    signupTest
+} = require('../../controllers/mySQL/Usermanagement');
 
 const {
     authMiddleware,
     tokenVerify
-} = require('../validators/auth')
+} = require('../../validators/auth')
 
 const {
     upload
-} = require('../helpers/General')
+} = require('../../helpers/General')
 
 updateAuthCrons();
 
 router.post('/sign_up', signup);
+router.post('/sign_test', signupTest);
 router.post('/sign_in', signin);
 router.post('/login', login);
 router.post('/resend_otp', resendOtp);

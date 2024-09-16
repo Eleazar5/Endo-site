@@ -1,4 +1,4 @@
-const connection = require('../helpers/dbConfig');
+const connection = require('../../helpers/mysqlConfig');
 
 const newUser_data = (data, res) => {
     connection.query('INSERT INTO `tb_players` SET ?', data, function (err, results) {

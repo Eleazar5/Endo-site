@@ -4,7 +4,8 @@ const router = express.Router();
 const {
     worldCountries,
     checkServerAlive,
-    generatePDFandExportBase64
+    generatePDFandExportBase64,
+    simplePdfUpload
 } = require('../controllers/General_Data');
 const {
     upload,
@@ -16,7 +17,8 @@ const {
 } = require('../validators/auth')
 router.get('/countries', worldCountries);
 router.get('/serverstatus', checkServerAlive);
-router.get('/generatepdf', upload, generatePDFandExportBase64);
+router.post('/generatepdf', upload, generatePDFandExportBase64);
+router.post('/parsepdf', upload, simplePdfUpload);
 
 module.exports =router;
 

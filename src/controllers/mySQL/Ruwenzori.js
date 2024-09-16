@@ -1,10 +1,10 @@
-const connection = require('../helpers/dbConfig');
+const connection = require('../../helpers/mysqlConfig');
 const moment = require("moment");
 
 const {
     transformPhoneNumber,
     appendToLogFile
-} = require('../helpers/General');
+} = require('../../helpers/General');
 
 //Customers
 exports.newCustomer = (req, res) => {
@@ -74,11 +74,11 @@ exports.getCustomerspagination = (req, res) => {
 
 exports.updateCustomer = (req, res) => {
     const { id } = req.params;
-    const { firstname, lastname, phone, email } = req.body;
+    const { firstname, lastname, phone_number, email } = req.body;
 
     const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    if (!firstname && !lastname && !phone && !email) {
+    if (!firstname && !lastname && !phone_number && !email) {
         const resObject = {
             errorDesc: "At least one field (First Name, Last Name, Phone, or Email) is required to update",
             success: "0"
@@ -111,9 +111,9 @@ exports.updateCustomer = (req, res) => {
                     updateFields.push("lastname = ?");
                     updateValues.push(lastname);
                 }
-                if (phone) {
+                if (phone_number) {
                     updateFields.push("phone_number = ?");
-                    updateValues.push(phone);
+                    updateValues.push(phone_number);
                 }
                 if (email) {
                     updateFields.push("email = ?");
@@ -144,6 +144,42 @@ exports.updateCustomer = (req, res) => {
     });
 };
 
+exports.deleteCustomer = (req, res) => {
+    const { id } = req.params;
+
+    const deleteQuery = 'DELETE FROM tb_customers WHERE id = ?';
+    connection.query(deleteQuery, [id], function(err, rows) {
+        if (err) {
+            return res.status(500).send("Error in deleting the record");
+        } else {
+            const resObject = {
+                errorDesc: "Record has been deleted",
+                success: "1"
+            };
+            appendToLogFile(`Customer with ID ${id} has been deleted`);
+            return res.status(200).send(resObject);
+        }
+    });
+};
+
+exports.getCustomerById = (req, res) => {
+    const { id } = req.params;
+
+    const selectQuery = 'SELECT * FROM tb_customers WHERE id = ?';
+    connection.query(selectQuery, [id], function(err, rows) {
+        if (err) {
+            return res.status(500).send("Error in getting the record");
+        } else {
+            const resObject = {
+                data: rows[0],
+                errorDesc: "Record has been fetched",
+                success: "1"
+            };
+            appendToLogFile(`Customer with ID ${id} has been fetched`);
+            return res.status(200).send(resObject);
+        }
+    });
+};
 
 //Vendors
 exports.newVendor = (req, res) => {
@@ -283,6 +319,24 @@ exports.updateVendor = (req, res) => {
     });
 };
 
+exports.deleteVendor = (req, res) => {
+    const { id } = req.params;
+
+    const deleteQuery = 'DELETE FROM tb_vendors WHERE id = ?';
+    connection.query(deleteQuery, [id], function(err, rows) {
+        if (err) {
+            return res.status(500).send("Error in deleting the record");
+        } else {
+            const resObject = {
+                errorDesc: "Record has been deleted",
+                success: "1"
+            };
+            appendToLogFile(`Vendor with ID ${id} has been deleted`);
+            return res.status(200).send(resObject);
+        }
+    });
+};
+
 //Sales
 exports.newSale = (req, res) => {
     const {
@@ -413,6 +467,24 @@ exports.updateSale = (req, res) => {
     });
 };
 
+exports.deleteSale = (req, res) => {
+    const { id } = req.params;
+
+    const deleteQuery = 'DELETE FROM tb_sales WHERE id = ?';
+    connection.query(deleteQuery, [id], function(err, rows) {
+        if (err) {
+            return res.status(500).send("Error in deleting the record");
+        } else {
+            const resObject = {
+                errorDesc: "Record has been deleted",
+                success: "1"
+            };
+            appendToLogFile(`Sale with ID ${id} has been deleted`);
+            return res.status(200).send(resObject);
+        }
+    });
+};
+
 //Products
 exports.newProduct = (req, res) => {
     const {
@@ -521,6 +593,24 @@ exports.updateProduct = (req, res) => {
                     return res.status(200).send(resObject);
                 });
             }
+        }
+    });
+};
+
+exports.deleteProduct = (req, res) => {
+    const { id } = req.params;
+
+    const deleteQuery = 'DELETE FROM tb_products WHERE id = ?';
+    connection.query(deleteQuery, [id], function(err, rows) {
+        if (err) {
+            return res.status(500).send("Error in deleting the record");
+        } else {
+            const resObject = {
+                errorDesc: "Record has been deleted",
+                success: "1"
+            };
+            appendToLogFile(`Product with ID ${id} has been deleted`);
+            return res.status(200).send(resObject);
         }
     });
 };
