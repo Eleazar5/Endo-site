@@ -54,7 +54,7 @@ exports.updateAuthCrons = () => {
     });
 
     const dbBackup = cron.schedule('0 0 * * *', () => {
-        const backupFilePath = path.join(__dirname, '..', 'library/database_backups', `backup-${moment().format('YYYY-MM-DD')}.sql`);
+        const backupFilePath = path.join(__dirname, '..', '../library/database_backups', `backup-${moment().format('YYYY-MM-DD')}.sql`);
 
         const scriptmsg = "Database backup done";
         const command = `mysqldump -u ${DB_USER} -p${DB_PASS} ${DB_NAME} > "${backupFilePath}"`;
