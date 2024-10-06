@@ -5,7 +5,8 @@ const {
 } = require('../helpers/General');
 
 const {
-    generateNewPDFBase64
+    generateNewPDFBase64,
+    translateText
 } = require('../helpers/General')
 const pdf = require('pdf-parse');
 const fs = require('fs');
@@ -102,7 +103,7 @@ exports.simplePdfUpload = (req, res) => {
         };
 
         // Send the entire extracted data as JSON response
-        res.send(jsonData.text);
+        res.send(translateText(jsonData.text, 'sw'));
 
         fs.unlinkSync(filePath);
 

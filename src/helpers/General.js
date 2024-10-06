@@ -7,6 +7,7 @@ const multer = require('multer');
 const axios = require('axios');
 const ping = require('ping');
 const PDFDocument = require('pdfkit');
+const translate = require('@vitalets/google-translate-api');
 
 const {
     mailUser,
@@ -323,6 +324,16 @@ const getPublicIP = async () => {
   }
 };
 
+const translateText =  async (text, targetLanguage) => {
+  try {
+    const res = await translate(text, { to: targetLanguage });
+    console.log(`Original Text: ${text}`);
+    console.log(`Translated Text: ${res.text}`);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
 module.exports = {
     transformPhoneNumber,
     capitalizeFirstLetter,
@@ -338,5 +349,6 @@ module.exports = {
     pingToTestServer,
     generateNewPDF,
     generateNewPDFBase64,
-    getPublicIP
+    getPublicIP,
+    translateText
 }
