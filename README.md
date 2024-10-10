@@ -15,6 +15,13 @@ DB_PASS=''
 DB_NAME='mobi_duka'
 SECRETKEY='mobidukasecret'
 
+DBTYPE='ormsql'  # else 'mysql' ,'postgres', 'mongo'
+organization='Sm@rt Tech'
+emailuser=''
+orgphone=''
+emailusertitle='Software Engineer'
+orgsite='www.endosite.co.ke'
+
 PASSKEY = ''
 
 SHORTCODE = ''
@@ -25,7 +32,7 @@ initiatorname=""
 initiatorPassword=""
 
 mailUser='eleazarsimba3000@gmail.com'
-mailPass='ynry bfzv mdgl uwnt'
+mailPass=''
 
 WHATSAPP_TOKEN = ""
 VERIFY_TOKEN = ""
