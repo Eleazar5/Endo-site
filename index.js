@@ -51,20 +51,20 @@ let ussdroute;
 let whatsapproute;
 
 switch(DBTYPE) {
-  case 'mysql':
+  case 'ormpostgres':
     usermanagement = require('./src/routes/mySQL/Usermanagement');
     ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
     ussdroute = require('./src/routes/mySQL/Ussd');
     whatsapproute = require('./src/routes/mySQL/Whatsapp');
     break;
-  case 'postgres':
+  case 'ormmongo':
     usermanagement = require('./src/routes/mySQL/Usermanagement');
     ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
     ussdroute = require('./src/routes/mySQL/Ussd');
     whatsapproute = require('./src/routes/mySQL/Whatsapp');
     break;
-  case 'mongo':
-    usermanagement = require('./src/routes/mySQL/Usermanagement');
+  case 'ormsql':
+    usermanagement = require('./src/helpers/orm/routes/Usermanagement');
     ruwenzoriroute = require('./src/routes/mySQL/Ruwenzori');
     ussdroute = require('./src/routes/mySQL/Ussd');
     whatsapproute = require('./src/routes/mySQL/Whatsapp');
