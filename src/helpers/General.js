@@ -38,7 +38,7 @@ const appendToLogFile = (log) => {
 //Create file logs
 const appendToLogFileNewUsers = (log) => {
   const logMessage = `${log} \n`;
-  const logsFilePath = path.join(__dirname, '..', 'library/activity_logs', `Users.txt`);
+  const logsFilePath = path.join(__dirname, '..', 'library/activity_logs', `Mpesa.txt`);
   if(saveActiviyLogs == "true"){
       fs.appendFile(logsFilePath, logMessage, function (err) {
           if (err) throw err;

@@ -5,6 +5,10 @@ const fs = require('fs');
 const path = require('path');
 // const connection = require('../helpers/dbConfig');
 
+const {
+    appendToLogFileNewUsers,
+} = require('../helpers/General');
+
 const { 
     PASSKEY,
     SHORTCODE,
@@ -288,6 +292,12 @@ exports.timeout_bal_result = (req, res) => {
 // Get transaction status
 exports.transaction_status = (req, res) => {
     const token = req.token;
+    const { 
+        trans_ref, 
+        shortcode, 
+        initiator_name, 
+        initiator_pass 
+    } = req.body;
     const url = `${mpesaURL}/mpesa/transactionstatus/v1/query`;
 
     const headers = { 
@@ -295,11 +305,11 @@ exports.transaction_status = (req, res) => {
     }
 
     let data = {
-        Initiator: initiatorName,
-        SecurityCredential: securityCredential(initiatorPassword),
+        Initiator: initiator_name,
+        SecurityCredential: securityCredential(initiator_pass),
         CommandID: "TransactionStatusQuery",
-        TransactionID: "SBF37QDY9J",
-        PartyA: SHORTCODE,
+        TransactionID: trans_ref,
+        PartyA: shortcode,
         IdentifierType: "4",
         ResultURL: `${sitebaseURL}/transactions/status_result`,
         QueueTimeOutURL: `${sitebaseURL}/transactions/timeout_result`,
@@ -310,6 +320,7 @@ exports.transaction_status = (req, res) => {
     axios
     .post(url, data, { headers })
     .then(response => {
+        console.log(response.data)
         res.send(response.data)
     })
     .catch((error) => {
@@ -319,7 +330,8 @@ exports.transaction_status = (req, res) => {
 };
 
 exports.transaction_status_result = (req, res) => {
-    const resultData = req.body?.Result.ResultParameters;
+    const resultData = req.body?.Result?.ResultParameters;
+    appendToLogFileNewUsers(JSON.stringify(req.body.Result.ResultParameters))
     console.log(JSON.stringify(req.body))
 
     // const phone = resultData.ResultParameter[0].Value;
@@ -366,6 +378,7 @@ exports.transaction_status_result = (req, res) => {
 
 exports.timeout_status_result = (req, res) => {
     console.log(JSON.stringify(req.body))
+    appendToLogFileNewUsers(JSON.stringify(req.body.Result.ResultParameters))
     res.send("Transaction Time out")
 }
 
